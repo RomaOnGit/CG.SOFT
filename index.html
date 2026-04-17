@@ -480,11 +480,11 @@
   <!-- NOSOTROS -->
   <section id="nosotros">
     <div class="section-tag">El equipo</div>
-    <h2>Aliados que <em>resuelven</em> problemas reales</h2>
+    <h2>Desarrolladores que <em>resuelven</em> problemas reales</h2>
 
     <div class="about-layout">
       <div class="about-text reveal">
-        <p>En <strong>CG Soft</strong> somos un equipo compacto de ingenieros con experiencia en desarrollo de software, automatización y el ecosistema Microsoft.</p>
+        <p>En <strong>CG Soft</strong> somos un equipo compacto de desarrolladores con experiencia en desarrollo de software, automatización y el ecosistema Microsoft.</p>
         <p>Nuestra ventaja no es solo el conocimiento técnico: es la <strong>capacidad de aprender rápido y adaptarnos</strong> a lo que cada cliente necesita. Si la solución requiere una tecnología nueva, la incorporamos.</p>
         <p>Trabajamos de forma cercana con cada empresa, entendiendo su operación antes de escribir una sola línea de código. El resultado no es un producto genérico, sino una solución que encaja exactamente con tu realidad.</p>
       </div>
@@ -519,7 +519,7 @@
         <div class="step-num">01</div>
         <div>
           <h3>Consulta inicial</h3>
-          <p>Nos contás tu problema o necesidad. Sin compromisos. Analizamos si podemos ayudarte y te damos una visión honesta del alcance.</p>
+          <p>Cuéntanos tu problema o necesidad. Sin compromisos. Analizamos si podemos ayudarte y te damos una visión honesta del alcance.</p>
         </div>
       </div>
       <div class="step">
@@ -549,16 +549,12 @@
   <!-- CONTACTO -->
   <section id="contacto">
     <div class="section-tag">Contacto</div>
-    <h2>¿Tenés un <em>desafío</em> tecnológico?</h2>
+    <h2>¿Tienes un <em>desafío</em> tecnológico?</h2>
 
     <div class="contact-layout">
       <div class="contact-info reveal">
         <h3>Hablemos</h3>
-        <p>Completá el formulario y nos ponemos en contacto en menos de 24 horas. Sin spam, sin vendedores agresivos.</p>
-        <div class="contact-detail">
-          <span>📧</span>
-          <span><strong>Email:</strong> ejemplo@cgsoft.com</span>
-        </div>
+        <p>Completa el formulario y nos ponemos en contacto en menos de 24 horas. Sin spam, sin vendedores agresivos.</p>
         <div class="contact-detail">
           <span>🌐</span>
           <span><strong>Cobertura:</strong> Remoto / Todo el país</span>
@@ -570,24 +566,24 @@
       </div>
 
       <div class="reveal">
-        <form id="contactForm">
+        <form id="contactForm" action="https://formspree.io/f/xwvaovwj" method="POST">
           <div class="form-row">
             <div>
               <label for="nombre">Nombre</label>
-              <input type="text" id="nombre" placeholder="Tu nombre" required />
+              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
             </div>
             <div>
               <label for="empresa">Empresa</label>
-              <input type="text" id="empresa" placeholder="Nombre de tu empresa" />
+              <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa" />
             </div>
           </div>
           <div>
             <label for="email">Email</label>
-            <input type="email" id="email" placeholder="tu@empresa.com" required />
+            <input type="email" id="email" name="email" placeholder="tu@empresa.com" required />
           </div>
           <div>
             <label for="servicio">¿En qué podemos ayudarte?</label>
-            <select id="servicio">
+            <select id="servicio" name="servicio">
               <option value="">Seleccioná una opción</option>
               <option>Automatización de procesos</option>
               <option>Agentes con IA</option>
@@ -600,9 +596,9 @@
           </div>
           <div>
             <label for="mensaje">Contanos brevemente tu necesidad</label>
-            <textarea id="mensaje" placeholder="Describí el problema o lo que querés mejorar en tu empresa..." required></textarea>
+            <textarea id="mensaje" name="mensaje" placeholder="Describí el problema o lo que querés mejorar en tu empresa..." required></textarea>
           </div>
-          <button type="submit" class="submit-btn">Enviar consulta →</button>
+          <button type="submit" class="submit-btn" id="submitBtn">Enviar consulta →</button>
         </form>
 
         <div class="form-success" id="formSuccess">
@@ -626,11 +622,31 @@
 
     document.querySelectorAll('.reveal, .step').forEach(el => observer.observe(el));
 
-    // Form mock submit
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
+    // Formspree submit
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      this.style.display = 'none';
-      document.getElementById('formSuccess').style.display = 'block';
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+
+      const data = new FormData(this);
+      try {
+        const res = await fetch(this.action, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          this.style.display = 'none';
+          document.getElementById('formSuccess').style.display = 'block';
+        } else {
+          btn.textContent = 'Error al enviar. Intentá de nuevo.';
+          btn.disabled = false;
+        }
+      } catch {
+        btn.textContent = 'Error de conexión. Intentá de nuevo.';
+        btn.disabled = false;
+      }
     });
   </script>
 </body>
